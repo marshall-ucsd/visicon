@@ -1,4 +1,5 @@
 from distutils.core import setup
+import os
 
 def to_include(search='.'):
     """
