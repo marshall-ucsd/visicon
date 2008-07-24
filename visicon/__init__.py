@@ -23,6 +23,8 @@ import sys
 import Image
 import ImageDraw
 
+T = TRANSPARENT = -1
+
 class Visicon(object):
     """
     Visicon
@@ -40,7 +42,7 @@ class Visicon(object):
     """
     resize = 0
     min_size = 24
-    def __init__(self, string, seed, size=24):
+    def __init__(self, string, seed, size=24, background=0xffffff):
         """
         Visicon.__init__(self, string, seed, size=24) -> Visicon
         Initialises the Visicon, storing everything that could
@@ -61,7 +63,7 @@ class Visicon(object):
         self.rotate_two = dec(self.hash[4]) & 3
         self.fg_colour = (dec(self.hash[5:7]) & 239, dec(self.hash[7:9]) & 239, dec(self.hash[9:11]) & 239)
         self.fg_colour2 = (dec(self.hash[11:13]) & 239, dec(self.hash[13:15]) & 239, dec(self.hash[15:17]) & 239)
-        self.bg_colour = 0xffffff
+        self.background = background
         
         if self.size < self.min_size:
             self.resize = self.size
@@ -74,6 +76,11 @@ class Visicon(object):
         self.third = self.size / 3
         self.double = self.size * 2
         self.centre = self.img_size / 2
+        
+        if self.background is not TRANSPARENT:
+            self.image = Image.new('RGB', (self.img_size,) * 2, color=self.background)
+        else:
+            self.image = Image.new('RGBA', (self.img_size,) * 2)
     
     def draw_image(self):
         """
@@ -82,7 +89,6 @@ class Visicon(object):
         ``Image.Image`` instance.
         
         """
-        self.image = Image.new('RGB', (self.img_size,) * 2, color=self.bg_colour)
         self.draw = ImageDraw.Draw(self.image)
         self.draw_corners()
         self.draw_sides()
@@ -357,7 +363,6 @@ class Visicon(object):
         """
         rotation = rotation % 4
         if rotation is 1:
-            ###
             n = 0
             while n < len(points):
                 tmp1 = n; val1 = points[tmp1]
@@ -374,7 +379,6 @@ class Visicon(object):
                 points[tmp2] = self.size - val2 + modifier['y']
                 n += 2
         elif rotation is 3:
-            ###
             n = 0
             while n < len(points):
                 tmp1 = n; val1 = points[tmp1]
@@ -392,8 +396,3 @@ class Visicon(object):
                 n += 2
 
         return points
-
-if __name__ == '__main__':
-    vi = Visicon(os.environ.get('REMOTE_ADDR', '127.0.0.1'), 'foobar', 48)
-    print 'Content-Type: image/png\n'
-    vi.draw_image().save(sys.stdout, 'PNG')
