@@ -1,0 +1,3 @@
+Charles Darke's [Visiglyphs](http://digitalconsumption.com/forum/Visiglyphs-for-IP-visualisation) ported (or semi-ported) to Python. I chose to port Visiglyphs rather than [Identicons](http://www.docuverse.com/blog/donpark/2007/01/18/visual-security-9-block-ip-identification) (the 'original' implementation) since I understand PHP better than any of the languages Identicon was ported to.
+
+This is a **direct port** of the PHP implementation located at http://digitalconsumption.com/userfiles/1_glyph_O_zsRzU10f8dq4R-QCW4K_xg.zip.
